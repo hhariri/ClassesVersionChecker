@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_classversionchecker" default="compile.module.classversionchecker">
+  <dirname property="module.classversionchecker.basedir" file="${ant.file.module_classversionchecker}"/>
+  
+  <property name="module.jdk.home.classversionchecker" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.classversionchecker" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.classversionchecker" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.classversionchecker" value="${compiler.args}"/>
+  
+  <property name="classversionchecker.output.dir" value="${module.classversionchecker.basedir}/out/production/classVersionChecker"/>
+  <property name="classversionchecker.testoutput.dir" value="${module.classversionchecker.basedir}/out/test/classVersionChecker"/>
+  
+  <path id="classversionchecker.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="classversionchecker.module.production.classpath">
+    <path refid="${module.jdk.classpath.classversionchecker}"/>
+    <path refid="library.annotations.classpath"/>
+    <path refid="library.asm.classpath"/>
+  </path>
+  
+  <path id="classversionchecker.runtime.production.module.classpath">
+    <pathelement location="${classversionchecker.output.dir}"/>
+    <path refid="library.annotations.classpath"/>
+    <path refid="library.asm.classpath"/>
+  </path>
+  
+  <path id="classversionchecker.module.classpath">
+    <path refid="${module.jdk.classpath.classversionchecker}"/>
+    <pathelement location="${classversionchecker.output.dir}"/>
+    <path refid="library.testng.classpath"/>
+    <path refid="library.annotations.classpath"/>
+    <path refid="library.jmock.classpath"/>
+    <path refid="library.asm.classpath"/>
+  </path>
+  
+  <path id="classversionchecker.runtime.module.classpath">
+    <pathelement location="${classversionchecker.testoutput.dir}"/>
+    <pathelement location="${classversionchecker.output.dir}"/>
+    <path refid="library.testng.classpath"/>
+    <path refid="library.annotations.classpath"/>
+    <path refid="library.jmock.classpath"/>
+    <path refid="library.asm.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.classversionchecker">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.classversionchecker">
+    <patternset refid="excluded.from.module.classversionchecker"/>
+  </patternset>
+  
+  <path id="classversionchecker.module.sourcepath">
+    <dirset dir="${module.classversionchecker.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="classversionchecker.module.test.sourcepath">
+    <dirset dir="${module.classversionchecker.basedir}">
+      <include name="testSrc"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.classversionchecker" depends="compile.module.classversionchecker.production,compile.module.classversionchecker.tests" description="Compile module classVersionChecker"/>
+  
+  <target name="compile.module.classversionchecker.production" depends="register.custom.compilers" description="Compile module classVersionChecker; production classes">
+    <mkdir dir="${classversionchecker.output.dir}"/>
+    <javac2 destdir="${classversionchecker.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.classversionchecker}/javac">
+      <compilerarg line="${compiler.args.classversionchecker}"/>
+      <bootclasspath refid="classversionchecker.module.bootclasspath"/>
+      <classpath refid="classversionchecker.module.production.classpath"/>
+      <src refid="classversionchecker.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.classversionchecker"/>
+    </javac2>
+    
+    <copy todir="${classversionchecker.output.dir}">
+      <fileset dir="${module.classversionchecker.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.classversionchecker.tests" depends="register.custom.compilers,compile.module.classversionchecker.production" description="compile module classVersionChecker; test classes" unless="skip.tests">
+    <mkdir dir="${classversionchecker.testoutput.dir}"/>
+    <javac2 destdir="${classversionchecker.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.classversionchecker}/javac">
+      <compilerarg line="${compiler.args.classversionchecker}"/>
+      <bootclasspath refid="classversionchecker.module.bootclasspath"/>
+      <classpath refid="classversionchecker.module.classpath"/>
+      <src refid="classversionchecker.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.classversionchecker"/>
+    </javac2>
+    
+    <copy todir="${classversionchecker.testoutput.dir}">
+      <fileset dir="${module.classversionchecker.basedir}/testSrc">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.classversionchecker" description="cleanup module">
+    <delete dir="${classversionchecker.output.dir}"/>
+    <delete dir="${classversionchecker.testoutput.dir}"/>
+  </target>
+</project>
