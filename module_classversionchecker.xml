@@ -10,7 +10,9 @@
   
   <property name="classversionchecker.output.dir" value="${module.classversionchecker.basedir}/out/production/classVersionChecker"/>
   <property name="classversionchecker.testoutput.dir" value="${module.classversionchecker.basedir}/out/test/classVersionChecker"/>
-  
+
+
+
   <path id="classversionchecker.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>

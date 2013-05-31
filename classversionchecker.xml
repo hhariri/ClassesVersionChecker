@@ -172,6 +172,8 @@
       <property name="artifact.output.path" value="${artifact.output.files}"/>
     </ant>
   </target>
+
+
   
   <target name="artifact.jar" depends="init.artifacts, artifact.files" description="Build &#39;jar&#39; artifact">
     <mkdir dir="${artifact.output.jar}"/>
